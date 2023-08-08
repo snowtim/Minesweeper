@@ -2,6 +2,7 @@
     class MinesweeperService {
         public $mines = 0;
         public $minesCoordinate = array();
+        public $selectPosition = "";
 
         //Decide where mines position
         public function decideMinesCoordinate($mines, $minesCoordinate, $mode) {
@@ -42,30 +43,28 @@
                 $selectCoordinateY = readline("Enter Coordinate Y:")-1;
             }
 
-            $selectCoordinate = "$selectCoordinateX,$selectCoordinateY";
+            $selectPosition = "$selectCoordinateX,$selectCoordinateY";
 
-            return $selectCoordinate;
+            return $selectPosition;
         }
 
         //
-        public function checkNumberOfMines ($selectPosition, $minesPosition) {
-            /*if(in_array($selectPosition, $minesPosition)) {
+        public function checkNumberOfMines ($selectPosition, $minesPosition, $selectCoordinateX, $selectCoordinateY) {
+            if(in_array($selectPosition, $minesPosition)) {
                 echo "You Died"."\n";
                 return;
-            }*/
-            while(!in_array($selectPosition, $minesPosition)) {
+            }
 
-                $numberOfMines = 0;
-                foreach ($minesPosition as $coordinates) {
-                    $coordinatesX = explode(",", $coordinates)[0];
-                    $coordinatesY = explode(",", $coordinates)[1];
-                    $squareOfDistance = pow($selectCoordinateX - $coordinatesX, 2) + pow($selectCoordinateY - $coordinatesY, 2);
-                    if ($squareOfDistance == 2 || $squareOfDistance == 1) {
-                        $numberOfMines++;
-                    }
+            $numberOfMines = 0;
+            foreach ($minesPosition as $coordinates) {
+                $coordinatesX = explode(",", $coordinates)[0];
+                $coordinatesY = explode(",", $coordinates)[1];
+                $squareOfDistance = pow($selectCoordinateX - $coordinatesX, 2) + pow($selectCoordinateY - $coordinatesY, 2);
+                if ($squareOfDistance == 2 || $squareOfDistance == 1) {
+                    $numberOfMines++;
                 }
             }
 
-            echo "You Died!!";
+            return $numberOfMines;
         }
     }

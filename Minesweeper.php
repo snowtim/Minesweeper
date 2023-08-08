@@ -20,22 +20,22 @@
 
     $mines = $minesweeperService->mines;
     $minesCoordinate = $minesweeperService->minesCoordinate;
+    $selectPosition = $minesweeperService->selectPosition;
 
     $minesPosition = $minesweeperService->decideMinesCoordinate($mines, $minesCoordinate, $mode);
 
     print_r($minesPosition);
 
     //User select position
-    $selectCoordinateX = readline("Enter Coordinate X:")-1;
-    $selectCoordinateY = readline("Enter Coordinate Y:")-1;
+    while(!in_array($selectPosition, $minesPosition)) {
+        $selectCoordinateX = readline("Enter Coordinate X:") - 1;
+        $selectCoordinateY = readline("Enter Coordinate Y:") - 1;
 
-    $selectPosition = $minesweeperService->userSelectPosition($selectCoordinateX, $selectCoordinateY, $mode);
+        $selectPosition = $minesweeperService->userSelectPosition($selectCoordinateX, $selectCoordinateY, $mode);
 
+        $numberOfMines = $minesweeperService->checkNumberOfMines($selectPosition, $minesPosition, $selectCoordinateX, $selectCoordinateY);
 
-
-
-
-
-    //echo $numberOfMines."\n";
+        echo $numberOfMines . "\n";
+    }
 
     //print_r($mode);
