@@ -1,11 +1,17 @@
 <?php
     class MinesweeperService {
-        public $mines = 0;
-        public $minesCoordinate = array();
-        public $selectPosition = "";
+        public $mines; //= 0;
+        public $minesCoordinateArr; //= array();
+        public $userInputArr; //= "";
+
+        public function __construct() {
+            $this->mines = 0;
+            $this->minesCoordinateArr = array();
+            $this->userInputArr['selectCoordinate'] = "";
+        }
 
         //Decide where mines position
-        public function decideMinesCoordinate($mines, $minesCoordinate, $mode) {
+        public function decideMinesCoordinate($mines, $minesCoordinateArr, $mode) {
             /*while($mines < $mode['mines']) {
                 $minesLocationX = mt_rand(0, $mode['range'][0] - 1);
                 $minesLocationY = mt_rand(0, $mode['range'][1] - 1);
@@ -23,43 +29,45 @@
                 $minesCoordinateY = mt_rand(0, $mode['range'][1] - 1);
                 $minesTemporaryCoordinate = "$minesCoordinateX,$minesCoordinateY";
 
-                if(!in_array($minesTemporaryCoordinate, $minesCoordinate)) {
-                    $minesCoordinate[] = $minesTemporaryCoordinate;
+                if(!in_array($minesTemporaryCoordinate, $minesCoordinateArr)) {
+                    $minesCoordinateArr[] = $minesTemporaryCoordinate;
                     $mines++;
                 }
             }
-            return $minesCoordinate;
+            return $minesCoordinateArr;
         }
 
         //User select position
-        public function userSelectPosition($selectCoordinateX, $selectCoordinateY, $mode) {
-            while(($selectCoordinateX > $mode['range'][0] - 1) || $selectCoordinateX < 0) {
+        public function userSelectCoordinate($userInputArr, $mode) {
+            while(($userInputArr['selectCoordinateX'] > $mode['range'][0] - 1) || $userInputArr['selectCoordinateX'] < 0) {
                 echo "Invalid Coordinate, X value must between 1~".$mode['range'][0]."\n";
-                $selectCoordinateX = readline("Enter Coordinate X:")-1;
+                $userInputArr['selectCoordinateX'] = (int)readline("Enter Coordinate X:")-1;
             }
 
-            while(($selectCoordinateY > $mode['range'][1] - 1) || $selectCoordinateY < 0) {
+            while(($userInputArr['selectCoordinateY'] > $mode['range'][1] - 1) || $userInputArr['selectCoordinateY'] < 0) {
                 echo "Invalid Coordinate, Y value must between 1~".$mode['range'][1]."\n";
-                $selectCoordinateY = readline("Enter Coordinate Y:")-1;
+                $userInputArr['selectCoordinateY'] = (int)readline("Enter Coordinate Y:")-1;
             }
 
-            $selectPosition = "$selectCoordinateX,$selectCoordinateY";
+            $userInputArr['selectCoordinate'] = $userInputArr['selectCoordinateX'].",".$userInputArr['selectCoordinateY'];
 
-            return $selectPosition;
+            return $userInputArr;
         }
 
-        //
-        public function checkNumberOfMines ($selectPosition, $minesPosition, $selectCoordinateX, $selectCoordinateY) {
-            if(in_array($selectPosition, $minesPosition)) {
+        //check number of mines around the position you select
+        public function checkNumberOfMines ($userInputArr, $minesCoordinate) {
+            if(in_array($userInputArr['selectCoordinate'], $minesCoordinate)) {
                 echo "You Died"."\n";
                 return;
             }
 
             $numberOfMines = 0;
-            foreach ($minesPosition as $coordinates) {
+            foreach ($minesCoordinate as $coordinates) {
                 $coordinatesX = explode(",", $coordinates)[0];
                 $coordinatesY = explode(",", $coordinates)[1];
-                $squareOfDistance = pow($selectCoordinateX - $coordinatesX, 2) + pow($selectCoordinateY - $coordinatesY, 2);
+                $squareOfDistance =
+                    pow($userInputArr['selectCoordinateX'] - $coordinatesX, 2) +
+                    pow($userInputArr['selectCoordinateY'] - $coordinatesY, 2);
                 if ($squareOfDistance == 2 || $squareOfDistance == 1) {
                     $numberOfMines++;
                 }
