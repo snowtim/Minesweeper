@@ -17,7 +17,6 @@
     }
 
     $minesweeperService = new MinesweeperService();
-
     $mines = $minesweeperService->mines;
     $minesCoordinate = $minesweeperService->minesCoordinateArr;
     $userInputArr = $minesweeperService->userInputArr;
@@ -36,7 +35,16 @@
         $numberOfMines =
             $minesweeperService->checkNumberOfMines($userInputArr, $minesCoordinate);
 
-        echo $numberOfMines . "\n";
+        if(isset($numberOfMines)) {
+            switch ($numberOfMines) {
+                case 0:
+                    echo "No mines around your position.\n";
+                    break;
+                case 1:
+                    echo "1 mine around your position.\n";
+                    break;
+                default:
+                    echo $numberOfMines . " mines around your position.\n";
+            }
+        }
     }
-
-    //print_r($mode);
