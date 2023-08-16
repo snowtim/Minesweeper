@@ -6,9 +6,6 @@
     $selectMode = mb_strtoupper(readline("Select mode: Easy or Normal :"));
 
     switch ($selectMode) {
-        //case "EASY":
-        //    $mode = EASY;
-        //    break;
         case "NORMAL":
             $mode = NORMAL;
             break;
@@ -16,25 +13,23 @@
             $mode = EASY;
     }
 
+    //Initialization of object
     $minesweeperService = new MinesweeperService();
     $mines = $minesweeperService->mines;
-    $minesCoordinate = $minesweeperService->minesCoordinateArr;
+    $minesCoordinateArr = $minesweeperService->minesCoordinateArr;
     $userInputArr = $minesweeperService->userInputArr;
 
-    $minesCoordinate = $minesweeperService->decideMinesCoordinate($mines, $minesCoordinate, $mode);
+    $minesCoordinateArr = $minesweeperService->decideMinesCoordinate($mines, $minesCoordinateArr, $mode);
+    print_r($minesCoordinateArr);
 
-    print_r($minesCoordinate);
-
-    //User select position
-    while(!in_array($userInputArr['selectCoordinate'], $minesCoordinate)) {
-        //$userInputArr['selectCoordinateX'] = (int)readline("Enter Coordinate X:") - 1;
-        //$userInputArr['selectCoordinateY'] = (int)readline("Enter Coordinate Y:") - 1;
+    //Start the game
+    while(!in_array($userInputArr['selectCoordinate'], $minesCoordinateArr)) {
         $userInputArr = $minesweeperService->userInputArr;
 
         $userInputArr = $minesweeperService->userSelectCoordinate($userInputArr, $mode);
 
         $numberOfMines =
-            $minesweeperService->checkNumberOfMines($userInputArr, $minesCoordinate);
+            $minesweeperService->checkNumberOfMines($userInputArr, $minesCoordinateArr);
 
         if(isset($numberOfMines)) {
             switch ($numberOfMines) {
