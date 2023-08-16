@@ -1,5 +1,5 @@
 <?php
-    //MODE MAPPING
+    //MODE SETTING
     const EASY_MODE = [
         'mines' => 10,
         'range' => [5, 10]

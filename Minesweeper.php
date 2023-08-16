@@ -27,8 +27,9 @@
 
     //User select position
     while(!in_array($userInputArr['selectCoordinate'], $minesCoordinate)) {
-        $userInputArr['selectCoordinateX'] = (int)readline("Enter Coordinate X:") - 1;
-        $userInputArr['selectCoordinateY'] = (int)readline("Enter Coordinate Y:") - 1;
+        //$userInputArr['selectCoordinateX'] = (int)readline("Enter Coordinate X:") - 1;
+        //$userInputArr['selectCoordinateY'] = (int)readline("Enter Coordinate Y:") - 1;
+        $userInputArr = $minesweeperService->userInputArr;
 
         $userInputArr = $minesweeperService->userSelectCoordinate($userInputArr, $mode);
 
