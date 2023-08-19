@@ -80,7 +80,6 @@
                 return $checkedCoordinateArr;
             }
 
-
             //The array of user select coordinate and coordinates around.
             $minusCoordinateX = ($userInputArr['selectCoordinateX'] - 1) < 0 ? 0 : ($userInputArr['selectCoordinateX'] - 1);
             $minusCoordinateY = ($userInputArr['selectCoordinateY'] - 1) < 0 ? 0 : ($userInputArr['selectCoordinateY'] - 1);
