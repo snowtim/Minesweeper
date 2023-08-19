@@ -15,32 +15,43 @@
 
     //Initialization of object
     $minesweeperService = new MinesweeperService();
-    $mines = $minesweeperService->mines;
     $minesCoordinateArr = $minesweeperService->minesCoordinateArr;
     $userInputArr = $minesweeperService->userInputArr;
+    $checkedCoordinateArr = $minesweeperService->checkedCoordinateArr;
 
-    $minesCoordinateArr = $minesweeperService->decideMinesCoordinate($mines, $minesCoordinateArr, $mode);
+    $minesCoordinateArr = $minesweeperService->decideMinesCoordinate($minesCoordinateArr, $mode);
+
     print_r($minesCoordinateArr);
 
     //Start the game
-    while(!in_array($userInputArr['selectCoordinate'], $minesCoordinateArr)) {
+    do {
         $userInputArr = $minesweeperService->userInputArr;
-
         $userInputArr = $minesweeperService->userSelectCoordinate($userInputArr, $mode);
-
         $numberOfMines =
             $minesweeperService->checkNumberOfMines($userInputArr, $minesCoordinateArr);
 
         if(isset($numberOfMines)) {
             switch ($numberOfMines) {
-                case 0:
-                    echo "No mines around your position.\n";
-                    break;
                 case 1:
-                    echo "1 mine around your position.\n";
+                    echo sprintf("%d mine around your position.\n", $numberOfMines);
                     break;
                 default:
-                    echo $numberOfMines . " mines around your position.\n";
+                    echo sprintf("%d mines around your position.\n", $numberOfMines);
             }
         }
-    }
+
+        $checkedCoordinateArr =
+            $minesweeperService->checkedArea($userInputArr, $minesCoordinateArr, $checkedCoordinateArr, $mode);
+
+        $safeCoordinate = $mode['range'][0]*$mode['range'][1] - $mode['mines'];
+
+        if(count($checkedCoordinateArr) == $safeCoordinate) {
+            echo "You Win!!\n";
+        }
+
+        sort($checkedCoordinateArr);
+        print_r($checkedCoordinateArr);
+
+    } while (!in_array($userInputArr['selectCoordinate'], $minesCoordinateArr) && count($checkedCoordinateArr) != $safeCoordinate);
+
+
