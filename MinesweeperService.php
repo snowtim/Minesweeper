@@ -80,6 +80,8 @@
                 return $checkedCoordinateArr;
             }
 
+
+            //The array of user select coordinate and coordinates around.
             $minusCoordinateX = ($userInputArr['selectCoordinateX'] - 1) < 0 ? 0 : ($userInputArr['selectCoordinateX'] - 1);
             $minusCoordinateY = ($userInputArr['selectCoordinateY'] - 1) < 0 ? 0 : ($userInputArr['selectCoordinateY'] - 1);
             $positionCoordinateX =
@@ -99,6 +101,7 @@
                 8 => $positionCoordinateX . "," . $positionCoordinateY
             ]);
 
+            //Generate list of the array of safe coordinates.
             if(array_diff($checkedCoordinateTempArr, $minesCoordinateArr)) {
                 $checkedCoordinateTempArr = array_diff($checkedCoordinateTempArr, $minesCoordinateArr);
 
