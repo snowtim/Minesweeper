@@ -1,6 +1,8 @@
 <?php
-    include 'MinesweeperConstant.php';
-    include 'MinesweeperService.php';
+    namespace Minesweeper;
+
+    require_once 'MinesweeperConstant.php';
+    require_once 'MinesweeperService.php';
 
     //Select mode
     $selectMode = mb_strtoupper(readline("Select mode: Easy or Normal :"));
@@ -16,7 +18,6 @@
     //Initialization of object
     $minesweeperService = new MinesweeperService();
     $minesCoordinateArr = $minesweeperService->minesCoordinateArr;
-    $userInputArr = $minesweeperService->userInputArr;
     $checkedCoordinateArr = $minesweeperService->checkedCoordinateArr;
 
     $minesCoordinateArr = $minesweeperService->decideMinesCoordinate($minesCoordinateArr, $mode);
@@ -31,6 +32,9 @@
             $minesweeperService->checkNumberOfMines($userInputArr, $minesCoordinateArr);
 
         if(isset($numberOfMines)) {
+            //just practice
+
+            //$numberOfMines = 1 ? sprintf("%d mine around your position.\n", $numberOfMines) : sprintf("%d mines around your position.\n", $numberOfMines);
             switch ($numberOfMines) {
                 case 1:
                     echo sprintf("%d mine around your position.\n", $numberOfMines);
@@ -41,7 +45,7 @@
         }
 
         $checkedCoordinateArr =
-            $minesweeperService->checkedArea($userInputArr, $minesCoordinateArr, $checkedCoordinateArr, $mode);
+            $minesweeperService->safeArea($userInputArr, $minesCoordinateArr, $checkedCoordinateArr, $mode);
 
         $safeCoordinate = $mode['range'][0]*$mode['range'][1] - $mode['mines'];
 

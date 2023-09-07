@@ -1,4 +1,6 @@
 <?php
+    namespace Minesweeper;
+
     class MinesweeperService {
         public $minesCoordinateArr;
         public $userInputArr;
@@ -75,14 +77,14 @@
             return $numberOfMines;
         }
 
-        public function checkedArea($userInputArr, $minesCoordinateArr, $checkedCoordinateArr, $mode) {
+        public function safeArea($userInputArr, $minesCoordinateArr, $checkedCoordinateArr, $mode) {
             if(in_array($userInputArr['selectCoordinate'], $minesCoordinateArr)) {
                 return $checkedCoordinateArr;
             }
 
             //The array of user select coordinate and coordinates around.
-            $minusCoordinateX = ($userInputArr['selectCoordinateX'] - 1) < 0 ? 0 : ($userInputArr['selectCoordinateX'] - 1);
-            $minusCoordinateY = ($userInputArr['selectCoordinateY'] - 1) < 0 ? 0 : ($userInputArr['selectCoordinateY'] - 1);
+            $minusCoordinateX = max(($userInputArr['selectCoordinateX'] - 1), 0);
+            $minusCoordinateY = max(($userInputArr['selectCoordinateY'] - 1), 0);
             $positionCoordinateX =
                 ($userInputArr['selectCoordinateX']+1) >= ($mode['range'][0]-1) ? $mode['range'][0]-1 : ($userInputArr['selectCoordinateX']+1);
             $positionCoordinateY =

@@ -1,4 +1,6 @@
 <?php
+    namespace Minesweeper;
+
     //MODE SETTING
     const EASY_MODE = [
         'mines' => 10,
@@ -10,7 +12,7 @@
     ];
 
     //MODE SELECT
-    const  EASY = EASY_MODE;
+    const EASY = EASY_MODE;
     const NORMAL = NORMAL_MODE;
 
 
