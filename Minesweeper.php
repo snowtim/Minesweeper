@@ -16,14 +16,20 @@
     //Initialization of object
     $minesweeperService = new MinesweeperService();
     $mines = $minesweeperService->mines;
-    $minesCoordinateArr = $minesweeperService->minesCoordinateArr;
-    $userInputArr = $minesweeperService->userInputArr;
+    $coordinateArr = $minesweeperService->coordinateArr;
+    //$userInputArr = $minesweeperService->userInputArr;
 
-    $minesCoordinateArr = $minesweeperService->decideMinesCoordinate($mines, $minesCoordinateArr, $mode);
-    print_r($minesCoordinateArr);
+    $coordinateArr = $minesweeperService->generateAllCoordinatesBySelectMode($coordinateArr, $mode);
+
+    $coordinateArr = $minesweeperService->decideMinesCoordinate($mines, $coordinateArr, $mode);
+    print_r($coordinateArr);
+
+    $col = count($coordinateArr);
+
+    echo $col;
 
     //Start the game
-    while(!in_array($userInputArr['selectCoordinate'], $minesCoordinateArr)) {
+    do {
         $userInputArr = $minesweeperService->userInputArr;
 
         $userInputArr = $minesweeperService->userSelectCoordinate($userInputArr, $mode);
@@ -43,4 +49,4 @@
                     echo $numberOfMines . " mines around your position.\n";
             }
         }
-    }
+    } while(($coordinateArr[$userInputCoordinateX][$userInputCoordinateY]['mine'] !== 0));*/

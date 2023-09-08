@@ -1,35 +1,45 @@
 <?php
     class MinesweeperService {
         public $mines;
-        public $minesCoordinateArr;
-        public $userInputArr;
+        public $coordinateArr;
 
         public function __construct() {
             $this->mines = 0;
-            $this->minesCoordinateArr = array();
+            $this->coordinateArr = array();
             $this->userInputArr['selectCoordinate'] = "";
             $this->userInputArr['selectCoordinateX'] = -1;
             $this->userInputArr['selectCoordinateY'] = -1;
         }
 
-        //Decide where mines' position
-        public function decideMinesCoordinate($mines, $minesCoordinateArr, $mode) {
-            while($mines < $mode['mines']) {
-                $minesCoordinateX = mt_rand(0, $mode['range'][0] - 1);
-                $minesCoordinateY = mt_rand(0, $mode['range'][1] - 1);
-                $minesTemporaryCoordinate = "$minesCoordinateX,$minesCoordinateY";
-
-                if(!in_array($minesTemporaryCoordinate, $minesCoordinateArr)) {
-                    $minesCoordinateArr[] = $minesTemporaryCoordinate;
-                    $mines++;
+        //Generate coordinate
+        public function generateAllCoordinatesBySelectMode($coordinateArr, $mode) {
+            for($coordinateX = 0; $coordinateX < $mode['range'][0]; $coordinateX++) {
+                for($coordinateY = 0; $coordinateY < $mode['range'][1]; $coordinateY++) {
+                    $coordinateArr[$coordinateX][$coordinateY] = [
+                        'mine' => 0,
+                        'checked' => 0
+                    ];
                 }
             }
 
-            return $minesCoordinateArr;
+            return $coordinateArr;
+        }
+
+        //Decide where mines' position
+        public function decideMinesCoordinate($mines, $coordinateArr, $mode) {
+            while($mines < $mode['mines']) {
+                $coordinateX = mt_rand(0, $mode['range'][0] - 1);
+                $coordinateY = mt_rand(0, $mode['range'][1] - 1);
+                $coordinateArr[$coordinateX][$coordinateY]['mine'] = 1;
+
+                $mines++;
+            }
+
+            return $coordinateArr;
         }
 
         //Composition of array that the position user select
-        public function userSelectCoordinate($userInputArr, $mode) {
+        /*public function userSelectCoordinate($userInputArr, $mode) {
             while(($userInputArr['selectCoordinateX'] > $mode['range'][0] - 1) || $userInputArr['selectCoordinateX'] < 0) {
                 echo "X value must between 1~".$mode['range'][0]."\n";
                 $userInputArr['selectCoordinateX'] = (int)readline("Enter Coordinate X:")-1;
@@ -43,7 +53,7 @@
             $userInputArr['selectCoordinate'] = $userInputArr['selectCoordinateX'].",".$userInputArr['selectCoordinateY'];
 
             return $userInputArr;
-        }
+        }*/
 
         //check number of mines around the position user select
         public function checkNumberOfMines ($userInputArr, $minesCoordinate) {
