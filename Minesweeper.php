@@ -16,26 +16,26 @@
     //Initialization of object
     $minesweeperService = new MinesweeperService();
     $mines = $minesweeperService->mines;
-    $coordinateArr = $minesweeperService->coordinateArr;
-    //$userInputArr = $minesweeperService->userInputArr;
+    $coordinateAry = $minesweeperService->coordinateAry;
+    $userInputAry = $minesweeperService->userInputAry;
 
-    $coordinateArr = $minesweeperService->generateAllCoordinatesBySelectMode($coordinateArr, $mode);
+    $coordinateAry = $minesweeperService->generateAllCoordinatesBySelectMode($coordinateAry, $mode);
 
-    $coordinateArr = $minesweeperService->decideMinesCoordinate($mines, $coordinateArr, $mode);
-    print_r($coordinateArr);
+    $coordinateAry = $minesweeperService->decideMinesCoordinate($mines, $coordinateAry, $mode);
+    print_r($coordinateAry);
 
-    $col = count($coordinateArr);
+    $col = array_values($coordinateAry);
 
-    echo $col;
+    print_r($col);
 
     //Start the game
-    do {
-        $userInputArr = $minesweeperService->userInputArr;
+    /*do {
+        $userInputAry = $minesweeperService->userInputAry;
 
-        $userInputArr = $minesweeperService->userSelectCoordinate($userInputArr, $mode);
+        $userInputAry = $minesweeperService->userSelectCoordinate($userInputAry, $mode);
 
         $numberOfMines =
-            $minesweeperService->checkNumberOfMines($userInputArr, $minesCoordinateArr);
+            $minesweeperService->checkNumberOfMines($userInputAry, $coordinateAry);
 
         if(isset($numberOfMines)) {
             switch ($numberOfMines) {
