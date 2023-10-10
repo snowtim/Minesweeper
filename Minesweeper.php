@@ -17,36 +17,42 @@
     $minesweeperService = new MinesweeperService();
     $mines = $minesweeperService->mines;
     $coordinateAry = $minesweeperService->coordinateAry;
-    $userInputAry = $minesweeperService->userInputAry;
-
     $coordinateAry = $minesweeperService->generateAllCoordinatesBySelectMode($coordinateAry, $mode);
-
     $coordinateAry = $minesweeperService->decideMinesCoordinate($mines, $coordinateAry, $mode);
-    print_r($coordinateAry);
 
-    $col = array_values($coordinateAry);
-
-    print_r($col);
+    //print_r($coordinateAry);
 
     //Start the game
-    /*do {
+    do {
         $userInputAry = $minesweeperService->userInputAry;
-
         $userInputAry = $minesweeperService->userSelectCoordinate($userInputAry, $mode);
 
-        $numberOfMines =
-            $minesweeperService->checkNumberOfMines($userInputAry, $coordinateAry);
+        $gameOver = $minesweeperService->gameOver($userInputAry, $coordinateAry, $mode);
+        if($gameOver == 1) {
+            break;
+        }
 
-        if(isset($numberOfMines)) {
-            switch ($numberOfMines) {
-                case 0:
-                    echo "No mines around your position.\n";
-                    break;
+        $coordinateAry = $minesweeperService->checkoutSafeCoordinate($userInputAry, $coordinateAry, $mode);
+        print_r($coordinateAry);
+
+        print_r((array_keys(array_column($coordinateAry, 'safe_coordinate'),1)));
+
+        $safeCoordinateAry = array_keys(array_column($coordinateAry, 'safe_coordinate'),1);
+
+        foreach($safeCoordinateAry as $safeCoordinate) {
+            $location = $coordinateAry[$safeCoordinate]['coordinate_X'].",".$coordinateAry[$safeCoordinate]['coordinate_Y'];
+
+            /*if($coordinateAry[$safeCoordinate]['mines_around'] > 0 ) {
+                echo sprintf("%d mines around %s.", $coordinateAry[$safeCoordinate]['mines_around'], $location)."\n";
+            }*/
+
+            switch($coordinateAry[$safeCoordinate]['mines_around']) {
                 case 1:
-                    echo "1 mine around your position.\n";
+                    echo sprintf("%d mine around %s.", $coordinateAry[$safeCoordinate]['mines_around'], $location) . "\n";
                     break;
-                default:
-                    echo $numberOfMines . " mines around your position.\n";
+                default :
+                    echo sprintf("%d mines around %s.", $coordinateAry[$safeCoordinate]['mines_around'], $location) . "\n";
+                    break;
             }
         }
-    } while(($coordinateArr[$userInputCoordinateX][$userInputCoordinateY]['mine'] !== 0));*/
+    } while(count(array_keys(array_column($coordinateAry, 'safe_coordinate'),1)) != 40);
