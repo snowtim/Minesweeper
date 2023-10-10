@@ -42,10 +42,6 @@
         foreach($safeCoordinateAry as $safeCoordinate) {
             $location = $coordinateAry[$safeCoordinate]['coordinate_X'].",".$coordinateAry[$safeCoordinate]['coordinate_Y'];
 
-            /*if($coordinateAry[$safeCoordinate]['mines_around'] > 0 ) {
-                echo sprintf("%d mines around %s.", $coordinateAry[$safeCoordinate]['mines_around'], $location)."\n";
-            }*/
-
             switch($coordinateAry[$safeCoordinate]['mines_around']) {
                 case 1:
                     echo sprintf("%d mine around %s.", $coordinateAry[$safeCoordinate]['mines_around'], $location) . "\n";
