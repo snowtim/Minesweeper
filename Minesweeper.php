@@ -12,43 +12,44 @@
         default:
             $mode = EASY;
     }
+    $safeArea = $mode['range'][0] * $mode['range'][1] - $mode['mines'];
 
     //Initialization of object
     $minesweeperService = new MinesweeperService();
     $mines = $minesweeperService->mines;
-    $coordinateAry = $minesweeperService->coordinateAry;
-    $coordinateAry = $minesweeperService->generateAllCoordinatesBySelectMode($coordinateAry, $mode);
-    $coordinateAry = $minesweeperService->decideMinesCoordinate($mines, $coordinateAry, $mode);
+    $allCoordinateAry = $minesweeperService->allCoordinateAry;
+    $allCoordinateAry = $minesweeperService->generateAllCoordinatesBySelectMode($allCoordinateAry, $mode);
+    $allCoordinateAry = $minesweeperService->decideMinesCoordinate($mines, $allCoordinateAry, $mode);
 
-    //print_r($coordinateAry);
+    //print_r($allCoordinateAry);
 
     //Start the game
     do {
-        $userInputAry = $minesweeperService->userInputAry;
-        $userInputAry = $minesweeperService->userSelectCoordinate($userInputAry, $mode);
+        $targetCoordinateAry = $minesweeperService->targetCoordinateAry;
+        $targetCoordinateAry = $minesweeperService->userSelectCoordinate($targetCoordinateAry, $mode);
 
-        $gameOver = $minesweeperService->gameOver($userInputAry, $coordinateAry, $mode);
+        $gameOver = $minesweeperService->gameOver($targetCoordinateAry, $allCoordinateAry, $mode);
         if($gameOver == 1) {
             break;
         }
 
-        $coordinateAry = $minesweeperService->checkoutSafeCoordinate($userInputAry, $coordinateAry, $mode);
-        print_r($coordinateAry);
+        $allCoordinateAry = $minesweeperService->checkoutSafeCoordinate($targetCoordinateAry, $allCoordinateAry, $mode);
+        print_r($allCoordinateAry);
 
-        print_r((array_keys(array_column($coordinateAry, 'safe_coordinate'),1)));
+        print_r((array_keys(array_column($allCoordinateAry, 'safe_coordinate'),1)));
 
-        $safeCoordinateAry = array_keys(array_column($coordinateAry, 'safe_coordinate'),1);
+        $safeCoordinateAry = array_keys(array_column($allCoordinateAry, 'safe_coordinate'),1);
 
         foreach($safeCoordinateAry as $safeCoordinate) {
-            $location = $coordinateAry[$safeCoordinate]['coordinate_X'].",".$coordinateAry[$safeCoordinate]['coordinate_Y'];
+            $coordinate = ($allCoordinateAry[$safeCoordinate]['coordinate_X']+1).",".($allCoordinateAry[$safeCoordinate]['coordinate_Y']+1);
 
-            switch($coordinateAry[$safeCoordinate]['mines_around']) {
+            switch($allCoordinateAry[$safeCoordinate]['mines_around']) {
                 case 1:
-                    echo sprintf("%d mine around %s.", $coordinateAry[$safeCoordinate]['mines_around'], $location) . "\n";
+                    echo sprintf("%d mine around %s.", $allCoordinateAry[$safeCoordinate]['mines_around'], $coordinate) . "\n";
                     break;
                 default :
-                    echo sprintf("%d mines around %s.", $coordinateAry[$safeCoordinate]['mines_around'], $location) . "\n";
+                    echo sprintf("%d mines around %s.", $allCoordinateAry[$safeCoordinate]['mines_around'], $coordinate) . "\n";
                     break;
             }
         }
-    } while(count(array_keys(array_column($coordinateAry, 'safe_coordinate'),1)) != 40);
+    } while(count($safeCoordinateAry) != $safeArea);
