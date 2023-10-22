@@ -151,6 +151,15 @@
                 $positionCoordinateX = min(($targetCoordinateX + 1), ($mode['range'][0] - 1));
                 $positionCoordinateY = min(($targetCoordinateY + 1), ($mode['range'][1] - 1));
 
+                /*$upCoordinateTurnToKey =
+                    ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $minusCoordinateY;
+                $rightCoordinateTurnToKey =
+                    ($mode['range'][1] - 1) * $minusCoordinateX + $minusCoordinateX + $targetCoordinateY;
+                $leftCoordinateTurnToKey =
+                    ($mode['range'][1] - 1) * $positionCoordinateX + $positionCoordinateX + $targetCoordinateY;
+                $downCoordinateTurnToKey =
+                    ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $positionCoordinateY;*/
+
                 $coordinateAroundTargetAry = [
                     /*0 => [
                         'coordinate_X' => $targetCoordinateX,
@@ -190,9 +199,18 @@
                     ]
                 ];
 
-                //print_r($coordinateAroundTargetAry);
+                /*$coordinateAroundTargetAry = [
+                    $allCoordinateAry[$upCoordinateTurnToKey],
+                    $allCoordinateAry[$rightCoordinateTurnToKey],
+                    $allCoordinateAry[$leftCoordinateTurnToKey],
+                    $allCoordinateAry[$downCoordinateTurnToKey]
+                ];*/
+
+                print_r($coordinateAroundTargetAry);
 
                 foreach ($coordinateAroundTargetAry as $coordinateAroundTarget) {
+
+                    print_r($coordinateAroundTarget);
                     $coordinateTurnToKey =
                         ($mode['range'][1] - 1) * $coordinateAroundTarget['coordinate_X'] + $coordinateAroundTarget['coordinate_X'] + $coordinateAroundTarget['coordinate_Y'];
 

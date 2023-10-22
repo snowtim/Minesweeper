@@ -34,9 +34,9 @@
         }
 
         $allCoordinateAry = $minesweeperService->checkoutSafeCoordinate($targetCoordinateAry, $allCoordinateAry, $mode);
-        print_r($allCoordinateAry);
+        //print_r($allCoordinateAry);
 
-        print_r((array_keys(array_column($allCoordinateAry, 'safe_coordinate'),1)));
+        //print_r((array_keys(array_column($allCoordinateAry, 'safe_coordinate'),1)));
 
         $safeCoordinateAry = array_keys(array_column($allCoordinateAry, 'safe_coordinate'),1);
 
