@@ -15,32 +15,29 @@
 
     //Initialization of object
     $minesweeperService = new MinesweeperService();
-    $mines = $minesweeperService->mines;
-    $minesCoordinateArr = $minesweeperService->minesCoordinateArr;
-    $userInputArr = $minesweeperService->userInputArr;
+    $allCoordinateAry = $minesweeperService->allCoordinateAry;
+    $userInputAry = $minesweeperService->userInputAry;
 
-    $minesCoordinateArr = $minesweeperService->decideMinesCoordinate($mines, $minesCoordinateArr, $mode);
-    print_r($minesCoordinateArr);
+
+    $allCoordinateAry = $minesweeperService->generateAllCoordinate($allCoordinateAry, $mode);
+    $normalAndMinesCoordinateData = $minesweeperService->decideMinesCoordinate($allCoordinateAry, $mode);
+    $allCoordinateAry = $normalAndMinesCoordinateData['all_coordinate_ary'];
+    $minesCoordinateAry = $normalAndMinesCoordinateData['mines_coordinate_ary'];
+    $allCoordinateAry =  $minesweeperService->accountNumberOfMinesAroundCenterCoordinate($allCoordinateAry, $minesCoordinateAry, $mode);
 
     //Start the game
-    while(!in_array($userInputArr['selectCoordinate'], $minesCoordinateArr)) {
-        $userInputArr = $minesweeperService->userInputArr;
+    do{
+        $userInputAry = $minesweeperService->userInputAry;
+        $userInputAry = $minesweeperService->userSelectCoordinate($userInputAry, $mode);
 
-        $userInputArr = $minesweeperService->userSelectCoordinate($userInputArr, $mode);
-
-        $numberOfMines =
-            $minesweeperService->checkNumberOfMines($userInputArr, $minesCoordinateArr);
-
-        if(isset($numberOfMines)) {
-            switch ($numberOfMines) {
-                case 0:
-                    echo "No mines around your position.\n";
-                    break;
-                case 1:
-                    echo "1 mine around your position.\n";
-                    break;
-                default:
-                    echo $numberOfMines . " mines around your position.\n";
-            }
+        $gameOver = $minesweeperService->gameOver($userInputAry, $allCoordinateAry);
+        if($gameOver == 0) {
+            echo "Game Over!\n";
+            break;
         }
-    }
+
+        $allCoordinateAry = $minesweeperService->spreadSafeArea($userInputAry, $allCoordinateAry, $mode);
+        $unopenedCoordinate = $minesweeperService->checkAllValueOfCoordinate($allCoordinateAry, $mode);
+        echo $unopenedCoordinate;
+
+    }while($unopenedCoordinate > 0);

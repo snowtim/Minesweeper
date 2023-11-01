@@ -5,7 +5,7 @@
         'range' => [5, 10]
     ];
     const NORMAL_MODE = [
-        'mines' => 30,
+        'mines' => 10,
         'range' => [10, 12]
     ];
 
