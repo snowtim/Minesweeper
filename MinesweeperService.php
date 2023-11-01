@@ -45,7 +45,7 @@
         /**
          * Decide where mines' position
          *
-         * @param       $mines
+         * @param int   $mines
          * @param array $allCoordinateAry
          * @param array $mode
          *
