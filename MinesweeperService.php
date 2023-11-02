@@ -12,6 +12,13 @@
         }
 
         /**Generate all coordinate
+         *
+         * @param array $allCoordinateAry
+         * @param array $mode
+         *
+         * @return array $allCoordinateAry
+         *
+         **/
         public function generateAllCoordinate($allCoordinateAry, $mode){
             for($coordinateX = 1; $coordinateX <= $mode['range'][0]; $coordinateX++) {
                 for ($coordinateY = 1; $coordinateY <= $mode['range'][1]; $coordinateY++) {
@@ -23,7 +30,14 @@
         }
 
 
-        //Decide mines' position
+        /**Decide mines' position
+         *
+         * @param array $allCoordinateAry
+         * @param array $mode
+         *
+         * @return array $normalAndMinesCoordinateData
+         *
+         **/
         public function decideMinesCoordinate($allCoordinateAry, $mode) {
             $mines = 0;
             while($mines < $mode['mines']) {
@@ -47,7 +61,15 @@
             return $normalAndMinesCoordinateData;
         }
 
-        //Checkout number of mines around the all coordinate.
+        /**Checkout number of mines around the all coordinate.
+         *
+         *@param array $allCoordinateAry
+         *@param array $minesCoordinateAry
+         *@param array $mode
+         *
+         *@return array $allCoordinateAry
+         *
+         **/
         public function accountNumberOfMinesAroundCenterCoordinate($allCoordinateAry, $minesCoordinateAry, $mode) {
             $numberOfMines = 0;
 
@@ -71,7 +93,14 @@
             return $allCoordinateAry;
         }
 
-        //Composition of array that the position user select
+        /**Composition of array that the coordinate user select
+         *
+         * @param array $userInputAry
+         * @param array $mode
+         *
+         * @return array $userInputAry
+         *
+         **/
         public function userSelectCoordinate($userInputAry, $mode) {
             while(($userInputAry['select_coordinate_x'] > $mode['range'][0]) || $userInputAry['select_coordinate_x'] < 0) {
                 echo "X value must between 1~".$mode['range'][0]."\n";
@@ -86,7 +115,13 @@
             return $userInputAry;
         }
 
-        //Check user's select if it is mine
+        /**Check user's select if it is mine
+         *
+         * @param array $userInputAry
+         * @param array $allCoordinateAry
+         *
+         * @return int
+         **/
         public function gameOver($userInputAry, $allCoordinateAry) {
             if($allCoordinateAry[$userInputAry['select_coordinate_x']][$userInputAry['select_coordinate_y']] == -1) {
                 return 0;
@@ -95,7 +130,15 @@
             return 1;
         }
 
-        //check number of mines around the position user select
+        /**Spread Area where has no mines
+         *
+         * @param array $userInputAry
+         * @param array $allCoordinateAry
+         * @param array $mode
+         *
+         * @return array $allCoordinateAry
+         *
+         **/
         public function spreadSafeArea($userInputAry, $allCoordinateAry, $mode) {
             if($allCoordinateAry[$userInputAry['select_coordinate_x']][$userInputAry['select_coordinate_y']] == 0) {
                 $allCoordinateAry[$userInputAry['select_coordinate_x']][$userInputAry['select_coordinate_y']] = 9;
@@ -133,12 +176,20 @@
             return $allCoordinateAry;
         }
 
-        public function checkAllValueOfCoordinate($allCoordinate, $mode) {
+        /**Check how many area do not been opened.
+         *
+         * @param array $allCoordinateAry
+         * @param array $mode
+         *
+         * @return int $unopenedCoordinate
+         *
+         **/
+        public function checkAllValueOfCoordinate($allCoordinateAry, $mode) {
             $unopenedCoordinate = 0;
 
             for($coordinateX = 1; $coordinateX <= $mode['range'][0]; $coordinateX++) {
                 for($coordinateY = 1; $coordinateY <= $mode['range'][1]; $coordinateY++) {
-                    if($allCoordinate[$coordinateX][$coordinateY] == 0) {
+                    if($allCoordinateAry[$coordinateX][$coordinateY] == 0) {
                         $unopenedCoordinate++;
                     }
                 }
