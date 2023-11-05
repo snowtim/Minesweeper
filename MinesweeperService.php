@@ -4,12 +4,12 @@
      * Class MinesweeperService
      */
     class MinesweeperService {
-        public $mines;
+        //public $mines;
         public $allCoordinateAry;
         public $targetCoordinateAry;
 
         public function __construct() {
-            $this->mines = 0;
+            //$this->mines = 0;
             $this->allCoordinateAry = array();
             $this->targetCoordinateAry = [
                 'target_coordinate_X' => -1,
@@ -51,8 +51,10 @@
          *
          * @return array $allCoordinateAry
          */
-        public function decideMinesCoordinate($mines, array $allCoordinateAry, array $mode): array
+        public function decideMinesCoordinate(array $allCoordinateAry, array $mode): array
         {
+            $mines = 0;
+
             while($mines < $mode['mines']) {
                 $allRange = $mode['range'][0] * $mode['range'][1];
                 $randomMinesCoordinate = mt_rand(0, $allRange-1);
@@ -136,21 +138,62 @@
         {
             $targetCoordinateX = $targetCoordinateAry['target_coordinate_X'];
             $targetCoordinateY = $targetCoordinateAry['target_coordinate_Y'];
-            //echo $targetCoordinateX."\n";
-            //echo $targetCoordinateY."\n";
             $coordinateTurnToKey =
                 ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $targetCoordinateY;
-            $allCoordinateAry[$coordinateTurnToKey]['safe_coordinate'] = 1;
             $allCoordinateAry = $this->checkNumberOfMines($targetCoordinateAry, $allCoordinateAry, $mode);
+            $allCoordinateAry[$coordinateTurnToKey]['safe_coordinate'] = 1;
+
+            $minusCoordinateX = max(($targetCoordinateX - 1), 0);
+            $coordinateTurnToKeyMinusX =
+                ($mode['range'][1] - 1) * $minusCoordinateX + $minusCoordinateX + $targetCoordinateY;
+
+            $minusCoordinateY = max(($targetCoordinateY - 1), 0);
+            $coordinateTurnToKeyMinusY =
+                ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $minusCoordinateY;
+
+            $increaseCoordinateX = min(($targetCoordinateX + 1), ($mode['range'][0] - 1));
+            $coordinateTurnToKeyIncreaseX =
+                ($mode['range'][1] - 1) * $increaseCoordinateX + $increaseCoordinateX + $targetCoordinateY;
+
+            $increaseCoordinateY = min(($targetCoordinateY + 1), ($mode['range'][1] - 1));
+            $coordinateTurnToKeyIncreaseY =
+                ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $increaseCoordinateY;
 
             if($allCoordinateAry[$coordinateTurnToKey]['mines_around'] == 0) {
+                if($allCoordinateAry[$coordinateTurnToKeyMinusX]['safe_coordinate'] == -1 && $allCoordinateAry[$coordinateTurnToKeyMinusX]['mine'] == 0) {
+                    $targetCoordinateAryMinusX = [
+                        'target_coordinate_X' => $minusCoordinateX,
+                        'target_coordinate_Y' => $targetCoordinateAry['target_coordinate_Y']
+                    ];
+                    $allCoordinateAry = $this->checkoutSafeCoordinate($targetCoordinateAryMinusX, $allCoordinateAry, $mode);
+                }
+
+                if($allCoordinateAry[$coordinateTurnToKeyMinusY]['safe_coordinate'] == -1 && $allCoordinateAry[$coordinateTurnToKeyMinusY]['mine'] == 0) {
+                    $targetCoordinateAryMinusY = [
+                        'target_coordinate_X' => $targetCoordinateAry['target_coordinate_X'],
+                        'target_coordinate_Y' => $minusCoordinateY
+                    ];
+                    $allCoordinateAry = $this->checkoutSafeCoordinate($targetCoordinateAryMinusY, $allCoordinateAry, $mode);
+                }
+
+                if($allCoordinateAry[$coordinateTurnToKeyIncreaseX]['safe_coordinate'] == -1 && $allCoordinateAry[$coordinateTurnToKeyIncreaseX]['mine'] == 0) {
+                    $targetCoordinateAryIncreaseX = [
+                        'target_coordinate_X' => $increaseCoordinateX,
+                        'target_coordinate_Y' => $targetCoordinateAry['target_coordinate_Y']
+                    ];
+                    $allCoordinateAry = $this->checkoutSafeCoordinate($targetCoordinateAryIncreaseX, $allCoordinateAry, $mode);
+                }
+
+                if($allCoordinateAry[$coordinateTurnToKeyIncreaseY]['safe_coordinate'] == -1 && $allCoordinateAry[$coordinateTurnToKeyIncreaseY]['mine'] == 0) {
+                    $targetCoordinateAryIncreaseY = [
+                        'target_coordinate_X' => $targetCoordinateAry['target_coordinate_X'],
+                        'target_coordinate_Y' => $increaseCoordinateY
+                    ];
+                    $allCoordinateAry = $this->checkoutSafeCoordinate($targetCoordinateAryIncreaseY, $allCoordinateAry, $mode);
+                }
+            }
 
                 //The array of user's target coordinate and coordinates around.
-                $minusCoordinateX = max(($targetCoordinateX - 1), 0);
-                $minusCoordinateY = max(($targetCoordinateY - 1), 0);
-                $positionCoordinateX = min(($targetCoordinateX + 1), ($mode['range'][0] - 1));
-                $positionCoordinateY = min(($targetCoordinateY + 1), ($mode['range'][1] - 1));
-
                 /*$upCoordinateTurnToKey =
                     ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $minusCoordinateY;
                 $rightCoordinateTurnToKey =
@@ -158,13 +201,13 @@
                 $leftCoordinateTurnToKey =
                     ($mode['range'][1] - 1) * $positionCoordinateX + $positionCoordinateX + $targetCoordinateY;
                 $downCoordinateTurnToKey =
-                    ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $positionCoordinateY;*/
+                    ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $positionCoordinateY;
 
                 $coordinateAroundTargetAry = [
-                    /*0 => [
+                    0 => [
                         'coordinate_X' => $targetCoordinateX,
                         'coordinate_Y' => $targetCoordinateY
-                    ],*/
+                    ],
                     1 => [
                         'coordinate_X' => $minusCoordinateX,
                         'coordinate_Y' => $minusCoordinateY
@@ -199,18 +242,14 @@
                     ]
                 ];
 
-                /*$coordinateAroundTargetAry = [
+                $coordinateAroundTargetAry = [
                     $allCoordinateAry[$upCoordinateTurnToKey],
                     $allCoordinateAry[$rightCoordinateTurnToKey],
                     $allCoordinateAry[$leftCoordinateTurnToKey],
                     $allCoordinateAry[$downCoordinateTurnToKey]
-                ];*/
-
-                print_r($coordinateAroundTargetAry);
+                ];
 
                 foreach ($coordinateAroundTargetAry as $coordinateAroundTarget) {
-
-                    print_r($coordinateAroundTarget);
                     $coordinateTurnToKey =
                         ($mode['range'][1] - 1) * $coordinateAroundTarget['coordinate_X'] + $coordinateAroundTarget['coordinate_X'] + $coordinateAroundTarget['coordinate_Y'];
 
@@ -232,9 +271,7 @@
                     if ($allCoordinateAry[$coordinateTurnToKey]['mines_around'] == 0) {
                         return $this->checkoutSafeCoordinate($targetCoordinateAry, $allCoordinateAry, $mode);
                     }
-                }
-            }
-
+                }*/
             return $allCoordinateAry;
         }
 
@@ -245,7 +282,7 @@
          * @param array $allCoordinateAry
          * @param array $mode
          *
-         * @return int $gameOver
+         * @return int
          */
         public function gameOver(array $targetCoordinateAry, array $allCoordinateAry, array $mode): int
         {

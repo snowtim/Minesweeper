@@ -16,10 +16,10 @@
 
     //Initialization of object
     $minesweeperService = new MinesweeperService();
-    $mines = $minesweeperService->mines;
+    //$mines = $minesweeperService->mines;
     $allCoordinateAry = $minesweeperService->allCoordinateAry;
     $allCoordinateAry = $minesweeperService->generateAllCoordinatesBySelectMode($allCoordinateAry, $mode);
-    $allCoordinateAry = $minesweeperService->decideMinesCoordinate($mines, $allCoordinateAry, $mode);
+    $allCoordinateAry = $minesweeperService->decideMinesCoordinate($allCoordinateAry, $mode);
 
     //print_r($allCoordinateAry);
 
@@ -34,7 +34,7 @@
         }
 
         $allCoordinateAry = $minesweeperService->checkoutSafeCoordinate($targetCoordinateAry, $allCoordinateAry, $mode);
-        //print_r($allCoordinateAry);
+        print_r($allCoordinateAry);
 
         //print_r((array_keys(array_column($allCoordinateAry, 'safe_coordinate'),1)));
 
