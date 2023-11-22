@@ -4,12 +4,10 @@
      * Class MinesweeperService
      */
     class MinesweeperService {
-        //public $mines;
         public $allCoordinateAry;
         public $targetCoordinateAry;
 
         public function __construct() {
-            //$this->mines = 0;
             $this->allCoordinateAry = array();
             $this->targetCoordinateAry = [
                 'target_coordinate_X' => -1,
@@ -18,7 +16,7 @@
         }
 
         /**
-         * Generate all coordinate
+         * Generate all coordinates.
          *
          * @param array $allCoordinateAry
          * @param array $mode
@@ -43,9 +41,8 @@
         }
 
         /**
-         * Decide where mines' position
+         * Decide where mines' position.
          *
-         * @param int   $mines
          * @param array $allCoordinateAry
          * @param array $mode
          *
@@ -70,7 +67,7 @@
         }
 
         /**
-         * Composition of array that the position user select
+         * Composition of array that the coordinate user select.
          *
          * @param array $targetCoordinateAry
          * @param array $mode
@@ -79,6 +76,7 @@
          */
         public function userSelectCoordinate(array $targetCoordinateAry, array $mode): array
         {
+            //'target_coordinate_X' and 'target_coordinate_Y' can't exceed range.
             while(($targetCoordinateAry['target_coordinate_X'] > $mode['range'][0] - 1) || $targetCoordinateAry['target_coordinate_X'] < 0) {
                 echo "X value must between 1~".$mode['range'][0]."\n";
                 $targetCoordinateAry['target_coordinate_X'] = (int)readline("Enter Coordinate X:")-1;
@@ -93,7 +91,7 @@
         }
 
         /**
-         * check number of mines around the position user select
+         * Calculate number of mines around the coordinate user select
          *
          * @param array $targetCoordinateAry
          * @param array $allCoordinateAry
@@ -106,11 +104,11 @@
             $numberOfMines = 0;
             $targetCoordinateX = $targetCoordinateAry['target_coordinate_X'];
             $targetCoordinateY = $targetCoordinateAry['target_coordinate_Y'];
-            $coordinateTurnToKey =
-                ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $targetCoordinateY;
+            $coordinateTurnToKey = $this->coordinateTurnToKey($targetCoordinateX, $targetCoordinateY, $mode);
             $minesCoordinateAry = array_keys(array_column($allCoordinateAry, 'mine'),1);
 
             foreach($minesCoordinateAry as $minesCoordinate) {
+                //Use distance to calculate how many mines around coordinate user select.
                 $squareOfDistance =
                     pow($targetCoordinateX - $allCoordinateAry[$minesCoordinate]['coordinate_X'], 2) +
                     pow($targetCoordinateY - $allCoordinateAry[$minesCoordinate]['coordinate_Y'], 2);
@@ -138,27 +136,24 @@
         {
             $targetCoordinateX = $targetCoordinateAry['target_coordinate_X'];
             $targetCoordinateY = $targetCoordinateAry['target_coordinate_Y'];
-            $coordinateTurnToKey =
-                ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $targetCoordinateY;
+            $coordinateTurnToKey = $this->coordinateTurnToKey($targetCoordinateX, $targetCoordinateY, $mode);
             $allCoordinateAry = $this->checkNumberOfMines($targetCoordinateAry, $allCoordinateAry, $mode);
             $allCoordinateAry[$coordinateTurnToKey]['safe_coordinate'] = 1;
 
+            //Four coordinate around the target.
             $minusCoordinateX = max(($targetCoordinateX - 1), 0);
-            $coordinateTurnToKeyMinusX =
-                ($mode['range'][1] - 1) * $minusCoordinateX + $minusCoordinateX + $targetCoordinateY;
+            $coordinateTurnToKeyMinusX = $this->coordinateTurnToKey($minusCoordinateX, $targetCoordinateY, $mode);
 
             $minusCoordinateY = max(($targetCoordinateY - 1), 0);
-            $coordinateTurnToKeyMinusY =
-                ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $minusCoordinateY;
+            $coordinateTurnToKeyMinusY = $this->coordinateTurnToKey($targetCoordinateX, $minusCoordinateY, $mode);
 
             $increaseCoordinateX = min(($targetCoordinateX + 1), ($mode['range'][0] - 1));
-            $coordinateTurnToKeyIncreaseX =
-                ($mode['range'][1] - 1) * $increaseCoordinateX + $increaseCoordinateX + $targetCoordinateY;
+            $coordinateTurnToKeyIncreaseX = $this->coordinateTurnToKey($increaseCoordinateX, $targetCoordinateY, $mode);
 
             $increaseCoordinateY = min(($targetCoordinateY + 1), ($mode['range'][1] - 1));
-            $coordinateTurnToKeyIncreaseY =
-                ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $increaseCoordinateY;
+            $coordinateTurnToKeyIncreaseY = $this->coordinateTurnToKey($targetCoordinateX, $increaseCoordinateY, $mode);
 
+            //Flood fill
             if($allCoordinateAry[$coordinateTurnToKey]['mines_around'] == 0) {
                 if($allCoordinateAry[$coordinateTurnToKeyMinusX]['safe_coordinate'] == -1 && $allCoordinateAry[$coordinateTurnToKeyMinusX]['mine'] == 0) {
                     $targetCoordinateAryMinusX = [
@@ -193,7 +188,7 @@
                 }
             }
 
-                //The array of user's target coordinate and coordinates around.
+                //The array of user's target coordinate and coordinates around.(This will be lost some area that must be open.)
                 /*$upCoordinateTurnToKey =
                     ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $minusCoordinateY;
                 $rightCoordinateTurnToKey =
@@ -286,17 +281,18 @@
          */
         public function gameOver(array $targetCoordinateAry, array $allCoordinateAry, array $mode): int
         {
-            $coordinateTurnToKey =
-                ($mode['range'][1] - 1) * $targetCoordinateAry['target_coordinate_X'] + $targetCoordinateAry['target_coordinate_X'] + $targetCoordinateAry['target_coordinate_Y'];
+            $coordinateTurnToKey = $this->coordinateTurnToKey($targetCoordinateAry['target_coordinate_X'], $targetCoordinateAry['target_coordinate_Y'], $mode);
 
             if($allCoordinateAry[$coordinateTurnToKey]['mine'] == 1) {
                 echo "You Died"."\n";
-                //$gameOver = 1;
                 return 1;
             }
 
-            //$gameOver = 0;
             return 0;
+        }
+
+        private function coordinateTurnToKey($targetCoordinateX, $targetCoordinateY, $mode) {
+            return ($mode['range'][1] - 1) * $targetCoordinateX + $targetCoordinateX + $targetCoordinateY;
         }
     }
 

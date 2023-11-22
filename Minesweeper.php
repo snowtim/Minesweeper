@@ -12,32 +12,32 @@
         default:
             $mode = EASY;
     }
+    //Total number of safe area.
     $safeArea = $mode['range'][0] * $mode['range'][1] - $mode['mines'];
 
-    //Initialization of object
+    //Initialization of MinesweeperService.
     $minesweeperService = new MinesweeperService();
-    //$mines = $minesweeperService->mines;
     $allCoordinateAry = $minesweeperService->allCoordinateAry;
     $allCoordinateAry = $minesweeperService->generateAllCoordinatesBySelectMode($allCoordinateAry, $mode);
     $allCoordinateAry = $minesweeperService->decideMinesCoordinate($allCoordinateAry, $mode);
 
-    //print_r($allCoordinateAry);
-
     //Start the game
     do {
+        //User select and input coordinate.
         $targetCoordinateAry = $minesweeperService->targetCoordinateAry;
         $targetCoordinateAry = $minesweeperService->userSelectCoordinate($targetCoordinateAry, $mode);
 
+        //If the coordinate has mine, finish game.
         $gameOver = $minesweeperService->gameOver($targetCoordinateAry, $allCoordinateAry, $mode);
         if($gameOver == 1) {
             break;
         }
 
+
         $allCoordinateAry = $minesweeperService->checkoutSafeCoordinate($targetCoordinateAry, $allCoordinateAry, $mode);
-        print_r($allCoordinateAry);
+        //print_r($allCoordinateAry);
 
-        //print_r((array_keys(array_column($allCoordinateAry, 'safe_coordinate'),1)));
-
+        //Sort out key of safe coordinate.
         $safeCoordinateAry = array_keys(array_column($allCoordinateAry, 'safe_coordinate'),1);
 
         foreach($safeCoordinateAry as $safeCoordinate) {
